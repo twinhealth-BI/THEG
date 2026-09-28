@@ -65,6 +65,13 @@
   .card{background:var(--card);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
   .card h3{margin:0 0 4px;font-size:16.5px;font-weight:800}
   .card .sub{margin:0 0 16px;font-size:13px;color:var(--muted)}
+  .g12{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+  .dom2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}
+  .dom2>div{min-width:0}
+  .dom-h{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 6px}
+  .dom-h span{font-weight:500;color:var(--muted)}
+  .lgd{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-weight:600;color:var(--ink2)}
+  .lgd i{width:11px;height:11px;border-radius:2px;display:inline-block}
   .chart-box{position:relative;height:230px}
   .chart-box.tall{height:280px}
 
@@ -260,8 +267,8 @@
   .recs li{position:relative;padding:8px 0 8px 26px;font-size:13px;color:#3a4a52;line-height:1.5;border-bottom:1px solid var(--line)}
   .recs li:last-child{border-bottom:none}
   .recs li:before{content:"";position:absolute;left:4px;top:13px;width:9px;height:9px;border-radius:3px;background:var(--teal)}
-  @media(max-width:1080px){.kpis{grid-template-columns:repeat(3,1fr)}.g3,.g4,.g5{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.funnel-circles{flex-direction:row}.out-grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.g3,.g4,.g5{grid-template-columns:1fr}.cohort-bar select{min-width:0;width:100%}.out-grid{grid-template-columns:1fr}}
+  @media(max-width:1080px){.kpis{grid-template-columns:repeat(3,1fr)}.g3,.g4,.g5{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.g12{grid-template-columns:minmax(0,1fr)}.funnel-circles{flex-direction:row}.out-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.g3,.g4,.g5{grid-template-columns:1fr}.dom2{grid-template-columns:minmax(0,1fr)}.cohort-bar select{min-width:0;width:100%}.out-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -623,16 +630,19 @@
     <div class="l"><span class="bar"></span><h2>Twin Composite Health Score (TCHS) — Population View</h2></div>
     <div class="note">Cohort aggregate of member-level scores · <span data-f="twsSub">43,916</span> members scored from blood, body, device and check-in data</div>
   </div>
-  <div class="grid g2" style="margin-bottom:18px">
+  <div class="grid g12" style="margin-bottom:18px">
     <div class="card">
       <h3>TCHS band distribution — baseline vs. latest</h3>
-      <p class="sub">Population mean TCHS <b><span data-f="twsS">61</span> → <span data-f="twsL2">74</span></b> · Strong 80–100 · Building 60–79 · Low &lt; 60</p>
-      <div class="chart-box" style="height:560px"><canvas id="twsDist"></canvas></div>
+      <p class="sub">Population mean TCHS <b><span data-f="twsS">61</span> → <span data-f="twsL2">74</span></b> · members in each band</p>
+      <div class="chart-box" style="height:360px"><canvas id="twsDist"></canvas></div>
     </div>
     <div class="card">
       <h3>TCHS domain breakdown — cohort mean</h3>
-      <p class="sub">Mean points within each health area's weight · 19 areas, weights add to 100 · baseline vs. latest</p>
-      <div class="chart-box" style="height:560px"><canvas id="twsDomain"></canvas></div>
+      <p class="sub">Mean points within each health area's weight · 19 areas, weights add to 100 <span class="lgd"><i style="background:#9fd9cd"></i>Baseline</span><span class="lgd"><i style="background:#0c6b62"></i>Latest</span></p>
+      <div class="dom2">
+        <div><div class="dom-h">Body, metabolic &amp; heart <span>· <span data-f="domAS">34.9</span> → <span data-f="domAL">44.3</span> of 62 points</span></div><div class="chart-box" style="height:340px"><canvas id="twsDomainA"></canvas></div></div>
+        <div><div class="dom-h">Labs, mind &amp; lifestyle <span>· <span data-f="domBS">26.1</span> → <span data-f="domBL">29.7</span> of 38 points</span></div><div class="chart-box" style="height:340px"><canvas id="twsDomainB"></canvas></div></div>
+      </div>
     </div>
   </div>
   <p class="sub" style="margin:-4px 2px 12px;font-size:13px;color:var(--muted)">Behavioural levers driving the score — cohort mean, start vs. latest</p>
@@ -918,16 +928,24 @@ NC('twsDist',twsDist,{type:'bar',data:{
     plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' members'}}},
     scales:{x:{stacked:true,...gx},y:{stacked:true,...gy()}}}});
 
-/* TCHS domain breakdown — the 19 health areas of the Twin Composite Health Score (weights add to 100) */
-NC('twsDomain',twsDomain,{type:'bar',data:{
-  labels:['Facial Scan /14','Weight /5','Waist Circumference /7','Blood Pressure /6','Glycemic /8','Insulin Resistance /4','Pancreas /2','Lipids /7','Cardiac /5','Liver /4','Renal /4','Inflammation /4','Thyroid & Hormones /3','Hematology & Iron /3','Micronutrients /3','Mental Health questionnaire /9','Symptoms logged /3','Energy & Mood /6','Activity & Sleep /3'],
-  datasets:[
-    {label:'Baseline',data:V.twDomB,backgroundColor:TEALL,borderRadius:4},
-    {label:'Latest',data:V.twDomL,backgroundColor:TEALD,borderRadius:4}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' of '+V.twDomCap[c.dataIndex]+' points'}}},
-    scales:{x:gy(14),y:{grid:{display:false},ticks:{color:'#0f2d35',font:{weight:'600'},autoSkip:false}}}}});
+/* TCHS domain breakdown — the 19 health areas of the Twin Composite Health Score (weights add to 100),
+   drawn as two side-by-side charts on the same 0–15 scale: areas 1–10 and 11–19 */
+var DOM_LAB=['Facial Scan /14','Weight /5','Waist Circumference /7','Blood Pressure /6','Glycemic /8','Insulin Resistance /4','Pancreas /2','Lipids /7','Cardiac /5','Liver /4','Renal /4','Inflammation /4','Thyroid & Hormones /3','Hematology & Iron /3','Micronutrients /3','Mental Health questionnaire /9','Symptoms logged /3','Energy & Mood /6','Activity & Sleep /3'];
+function domChart(key,from,to){
+  NC(key,document.getElementById(key),{type:'bar',data:{
+    labels:DOM_LAB.slice(from,to),
+    datasets:[
+      {label:'Baseline',data:V.twDomB.slice(from,to),backgroundColor:TEALL,borderRadius:4},
+      {label:'Latest',data:V.twDomL.slice(from,to),backgroundColor:TEALD,borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' of '+V.twDomCap[from+c.dataIndex]+' points'}}},
+      scales:{x:{...gy(15),ticks:{color:MUTED,stepSize:5}},y:{grid:{display:false},ticks:{color:'#0f2d35',font:{weight:'600'},autoSkip:false,
+        // on narrow screens break long area names over two lines so they are not cut off
+        callback:function(v){var l=this.getLabelForValue(v);if(this.chart.width>=360||l.length<=22)return l;var i=l.lastIndexOf(' ',Math.ceil(l.length/2)+2);return i>0?[l.slice(0,i),l.slice(i+1)]:l;}}}}}});
+}
+domChart('twsDomainA',0,10);
+domChart('twsDomainB',10,19);
 }
 
 /* TCHS behavioural levers (start->latest mcards) */
@@ -1178,6 +1196,9 @@ function computeView(d,vid){
   V.twDomB=_part(twB,Math.round(V.twsStart*10)).map(function(x,i){return Math.min(cap[i],x/10);});
   V.twDomL=_part(twL,Math.round(V.twsLatest*10)).map(function(x,i){return Math.min(cap[i],x/10);});
   V.twDomCap=cap;
+  var sum1=function(a){return (Math.round(a.reduce(function(x,y){return x+y;},0)*10)/10).toFixed(1);};
+  V.T.domAS=sum1(V.twDomB.slice(0,10)); V.T.domAL=sum1(V.twDomL.slice(0,10));
+  V.T.domBS=sum1(V.twDomB.slice(10));   V.T.domBL=sum1(V.twDomL.slice(10));
   V.divPHQ=[0.6,2.1,3.8].map(function(x){return R1(x*V.imp);});
   V.divA1c=noDia?[0,0,0]:[0.3,0.9,1.7].map(function(x){return R1(x*V.imp);});
   V.abPHQ=[8.6,7.2,5.7,4.5,3.9].map(function(x){return R1(x*V.mf);});
