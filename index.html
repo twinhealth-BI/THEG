@@ -618,21 +618,21 @@
     </div>
   </div>
 
-  <!-- ===================== TWIN WELLNESS SCORE — POPULATION VIEW ===================== -->
+  <!-- ===================== TWIN COMPOSITE HEALTH SCORE — POPULATION VIEW ===================== -->
   <div class="section-title">
-    <div class="l"><span class="bar"></span><h2>Twin Wellness Score (TWS) — Population View</h2></div>
-    <div class="note">Cohort aggregate of member-level scores · <span data-f="twsSub">36,889</span> with facial-scan TWS</div>
+    <div class="l"><span class="bar"></span><h2>Twin Composite Health Score (TCHS) — Population View</h2></div>
+    <div class="note">Cohort aggregate of member-level scores · <span data-f="twsSub">43,916</span> members scored from blood, body, device and check-in data</div>
   </div>
   <div class="grid g2" style="margin-bottom:18px">
     <div class="card">
-      <h3>TWS band distribution — baseline vs. latest</h3>
-      <p class="sub">Population mean TWS <b><span data-f="twsS">61</span> → <span data-f="twsL2">74</span></b> · Green 80–100 · Yellow 60–79 · Red &lt; 60</p>
-      <div class="chart-box"><canvas id="twsDist"></canvas></div>
+      <h3>TCHS band distribution — baseline vs. latest</h3>
+      <p class="sub">Population mean TCHS <b><span data-f="twsS">61</span> → <span data-f="twsL2">74</span></b> · Strong 80–100 · Building 60–79 · Low &lt; 60</p>
+      <div class="chart-box" style="height:560px"><canvas id="twsDist"></canvas></div>
     </div>
     <div class="card">
-      <h3>TWS domain breakdown — cohort mean</h3>
-      <p class="sub">Mean score within each domain weight · baseline vs. latest</p>
-      <div class="chart-box tall"><canvas id="twsDomain"></canvas></div>
+      <h3>TCHS domain breakdown — cohort mean</h3>
+      <p class="sub">Mean points within each health area's weight · 19 areas, weights add to 100 · baseline vs. latest</p>
+      <div class="chart-box" style="height:560px"><canvas id="twsDomain"></canvas></div>
     </div>
   </div>
   <p class="sub" style="margin:-4px 2px 12px;font-size:13px;color:var(--muted)">Behavioural levers driving the score — cohort mean, start vs. latest</p>
@@ -906,39 +906,39 @@ NC('detBars',detBars,{type:'bar',data:{
       tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' members'}}},
     scales:{x:{stacked:true,...gy()},y:{stacked:true,grid:{display:false},ticks:{color:'#0f2d35',font:{weight:'600'}}}}}});
 
-/* TWS band distribution (stacked) */
+/* TCHS band distribution (stacked) */
 NC('twsDist',twsDist,{type:'bar',data:{
   labels:['Baseline','Latest'],
   datasets:[
-    {label:'Red (<60)',data:[V.twsB[0],V.twsL[0]],backgroundColor:RED,borderRadius:4},
-    {label:'Yellow (60–79)',data:[V.twsB[1],V.twsL[1]],backgroundColor:ORANGE,borderRadius:4},
-    {label:'Green (80–100)',data:[V.twsB[2],V.twsL[2]],backgroundColor:GREEN,borderRadius:4}
+    {label:'Low (<60)',data:[V.twsB[0],V.twsL[0]],backgroundColor:RED,borderRadius:4},
+    {label:'Building (60–79)',data:[V.twsB[1],V.twsL[1]],backgroundColor:ORANGE,borderRadius:4},
+    {label:'Strong (80–100)',data:[V.twsB[2],V.twsL[2]],backgroundColor:GREEN,borderRadius:4}
   ]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' members'}}},
-    scales:{x:{stacked:true,...gx},y:{stacked:true,...gy(Math.round(V.twsSub*0.8))}}}});
+    scales:{x:{stacked:true,...gx},y:{stacked:true,...gy()}}}});
 
-/* TWS domain breakdown */
+/* TCHS domain breakdown — the 19 health areas of the Twin Composite Health Score (weights add to 100) */
 NC('twsDomain',twsDomain,{type:'bar',data:{
-  labels:['Cardiovascular /20','Autonomic & Stress /20','Respiratory /10','Body Comp & Hydration /15','Metabolic & Lifestyle /25','Symptoms & Family Hx /10'],
+  labels:['Facial Scan /14','Weight /5','Waist Circumference /7','Blood Pressure /6','Glycemic /8','Insulin Resistance /4','Pancreas /2','Lipids /7','Cardiac /5','Liver /4','Renal /4','Inflammation /4','Thyroid & Hormones /3','Hematology & Iron /3','Micronutrients /3','Mental Health questionnaire /9','Symptoms logged /3','Energy & Mood /6','Activity & Sleep /3'],
   datasets:[
     {label:'Baseline',data:V.twDomB,backgroundColor:TEALL,borderRadius:4},
     {label:'Latest',data:V.twDomL,backgroundColor:TEALD,borderRadius:4}
   ]},
   options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw}}},
-    scales:{x:gy(25),y:{grid:{display:false},ticks:{color:'#0f2d35',font:{weight:'600'}}}}}});
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' of '+V.twDomCap[c.dataIndex]+' points'}}},
+    scales:{x:gy(14),y:{grid:{display:false},ticks:{color:'#0f2d35',font:{weight:'600'},autoSkip:false}}}}});
 }
 
-/* TWS behavioural levers (start->latest mcards) */
-/* TWS levers + biometric vitals — per-cohort means */
+/* TCHS behavioural levers (start->latest mcards) */
+/* TCHS levers + biometric vitals — per-cohort means */
 var MET=[
  {g:'l',ico:'🏃',name:'Activity',unit:'min / week',s:64,l:138,good:'up',p:0,foot:function(s,l){return '▲ +'+(l-s)+' min · target ≥150';}},
  {g:'l',ico:'😴',name:'Sleep',unit:'hrs / night',s:5.8,l:7.1,good:'up',p:1,foot:function(s,l){return '▲ +'+(l-s).toFixed(1)+' hrs · in 7–9 range';}},
  {g:'l',ico:'🥗',name:'Diet Quality',unit:'/ 5',s:2.2,l:3.8,good:'up',p:1,foot:function(s,l){return '▲ +'+(l-s).toFixed(1)+' pts toward 4–5';}},
  {g:'l',ico:'⏰',name:'Sleep Consistency',unit:'hrs variability',s:1.9,l:0.9,good:'down',p:1,foot:function(s,l){return '▼ steadier schedule (≤1 hr)';}},
  {g:'l',ico:'🧠',name:'Mental Wellbeing Index',unit:'/ 100',src:'twsM',s:61,l:76,good:'up',p:0,foot:function(s,l){return '▲ +'+(l-s)+' pts · Steady & Resilient';}},
- {g:'v',ico:'🧠',name:'Wellness Score',unit:'/ 100',src:'tws',s:61,l:74,good:'up',p:0,foot:function(s,l){return '+'+(l-s)+' pts improvement';}},
+ {g:'v',ico:'🧠',name:'Twin Composite Health Score',unit:'/ 100',src:'tws',s:61,l:74,good:'up',p:0,foot:function(s,l){return '+'+(l-s)+' pts improvement';}},
  {g:'v',ico:'❤️',name:'Heart Rate',unit:'bpm',s:84,l:76,good:'down',p:0,foot:function(s,l){return '▼ '+(s-l)+' bpm (resting HR reduced)';}},
  {g:'v',ico:'🌬️',name:'Respiratory Rate',unit:'rpm',s:18.2,l:15.8,good:'down',p:1,foot:function(s,l){return '▼ '+(s-l).toFixed(1)+' rpm improved';}},
  {g:'v',ico:'⚡',name:'Stress Index',unit:'/ 10',s:6.8,l:4.3,good:'down',p:1,foot:function(s,l){return '▼ '+(s-l).toFixed(1)+' pts stress reduced';}},
@@ -1074,7 +1074,7 @@ function computeView(d,vid){
   var dysg=dia+predia;
   var anemia=_sc(8317,R), cv=_sc(9864,R), inflam=_sc(4731,R);
   var rHi=_sc(9864,R), rMo=_sc(19258,R), rLo=n-rHi-rMo;
-  var twsSub=_sc(36889,R), matched=_sc(29863,R), crit=_sc(4084,R);
+  var twsSub=n, matched=_sc(29863,R), crit=_sc(4084,R);   // TCHS is scored for every activated member (facial scan is one of 19 areas, not a requirement)
   function nk(total,pn,pt){var w=Math.round(total*pn/pt);return [w,total-w];}
   var bDl=nk(cd.dyslipidemia,12009,25552), bDg=nk(dysg,9036,22040), bFa=nk(cd.mafld,14136,19910),
       bHt=nk(cd.hypertension,5560,14632), bAn=nk(anemia,4574,8317), bRe=nk(cd.ckd,3888,6271);
@@ -1168,8 +1168,16 @@ function computeView(d,vid){
   var R1=function(x){return +x.toFixed(1);}, R2=function(x){return +x.toFixed(2);};
   var hds=Math.min(85,Math.round(61*V.imp)), hrem=100-hds, hp=Math.round(hrem*27/39);
   V.hab=[hds,hp,hrem-hp];
-  var twB=[13,11,6,9,15,7], twL=[16,15,8,11,17,7], cap=[20,20,10,15,25,10];
-  V.twDomB=twB.slice(); V.twDomL=twB.map(function(b,i){return Math.min(cap[i],Math.round(b+(twL[i]-b)*V.imp));});
+  // TCHS domain means (points within each area's weight), all-cohort baseline 61.0 / latest 74.0;
+  // each cohort is scaled to its own start / latest TCHS, one decimal, totals kept exact.
+  // Order: Facial Scan, Weight, Waist, BP, Glycemic, Insulin Resistance, Pancreas, Lipids, Cardiac, Liver,
+  //        Renal, Inflammation, Thyroid & Hormones, Hematology & Iron, Micronutrients, Mental Health, Symptoms, Energy & Mood, Activity & Sleep
+  var cap=[14,5,7,6,8,4,2,7,5,4,4,4,3,3,3,9,3,6,3];
+  var twB=[9.4,2.1,2.8,4.0,3.8,1.7,1.1,4.4,3.4,2.2,3.5,2.6,2.5,2.4,1.7,6.8,1.7,3.5,1.4];
+  var twL=[10.5,3.3,4.0,4.6,5.6,2.8,1.4,5.2,3.8,3.1,3.6,3.0,2.6,2.5,2.1,7.3,2.3,4.2,2.1];
+  V.twDomB=_part(twB,Math.round(V.twsStart*10)).map(function(x,i){return Math.min(cap[i],x/10);});
+  V.twDomL=_part(twL,Math.round(V.twsLatest*10)).map(function(x,i){return Math.min(cap[i],x/10);});
+  V.twDomCap=cap;
   V.divPHQ=[0.6,2.1,3.8].map(function(x){return R1(x*V.imp);});
   V.divA1c=noDia?[0,0,0]:[0.3,0.9,1.7].map(function(x){return R1(x*V.imp);});
   V.abPHQ=[8.6,7.2,5.7,4.5,3.9].map(function(x){return R1(x*V.mf);});
@@ -1194,48 +1202,48 @@ const COH={agg:{n:43916,age:[8253, 14979, 12141, 5908, 2635],male:24095,female:1
 
 /* Case studies, outcomes and recommendations per cohort.
    Outcomes track the population envelope (remission 23%, med elimination 84%,
-   mean weight -5.8 kg / 7.1%, MAFLD normalised 79%, mean A1c -1.5, TWS 61 to 74)
+   mean weight -5.8 kg / 7.1%, MAFLD normalised 79%, mean A1c -1.5, TCHS 61 to 74)
    with cohort-specific variation. Outcome tiles: [value, label]. */
 const CASES={
   ALL:{
     title:"All companies, aggregate view",
     story:"The activated population of 43,916 members spans 22 anonymised employer cohorts. Half the population (50.2 percent) is dysglycaemic at baseline and 9,204 members meet the diabetic threshold (HbA1c 6.5 or higher). Obesity affects 16,409 members and 18,006 carry two or more of the listed conditions, so multi-morbidity, not any single disease, is the dominant clinical signal. Results below are the blended cohort outcomes; selecting a Company ID isolates that employer's profile and the recommendation set tuned to it.",
-    out:[["23%","Diabetes remission (diabetic subgroup)"],["84%","Medication reduced or eliminated"],["-5.8 kg","Mean weight change (7.1 percent)"],["79%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["68%","Dyslipidemia controlled (at LDL target)"],["-31%","Mean 10-yr ASCVD risk reduction"],["74%","CKD — eGFR stabilised or improved"],["64%","PCOS — cycles regularised (women)"],["19.2% → 11.8%","Depression (PHQ-9 moderate+) reduced"],["7.3% → 4.1%","Anxiety (GAD-7 moderate+) reduced"],["61 to 74","Twin Wellness Score shift"]],
+    out:[["23%","Diabetes remission (diabetic subgroup)"],["84%","Medication reduced or eliminated"],["-5.8 kg","Mean weight change (7.1 percent)"],["79%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["68%","Dyslipidemia controlled (at LDL target)"],["-31%","Mean 10-yr ASCVD risk reduction"],["74%","CKD — eGFR stabilised or improved"],["64%","PCOS — cycles regularised (women)"],["19.2% → 11.8%","Depression (PHQ-9 moderate+) reduced"],["7.3% → 4.1%","Anxiety (GAD-7 moderate+) reduced"],["61 to 74","Twin Composite Health Score shift"]],
     recs:["Prioritise the 18,006 members with two or more conditions for clinician-led care plans, since they drive the majority of downstream cost.","Keep the diabetic subgroup (9,204) on the structured glycaemic track with continuous glucose monitoring at onboarding.","Maintain the 4,084 self-harm-flagged members on the 24-hour escalation protocol and report resolution monthly.","Use the per-company views below to set employer-specific engagement targets rather than a single population goal."]
   },
   "C-1042":{
     story:"C-1042 is the largest cohort at 17,919 members and tracks close to the population average, which makes it the reference case. 4,030 members are diabetic and 6,693 are obese. Dyslipidemia is the most prevalent single condition (57.1 percent) and 7,516 members (41.9 percent) carry multiple comorbidities. The size and balance of this cohort make it the most reliable read on what the program delivers at scale.",
-    out:[["24%","Diabetes remission"],["85%","Medication reduced or eliminated"],["-6.0 kg","Mean weight change (7.4 percent)"],["80%","MAFLD normalised"],["-1.6 pts","Mean HbA1c reduction"],["70%","Dyslipidemia controlled (at LDL target)"],["-33%","Mean 10-yr ASCVD risk reduction"],["76%","CKD — eGFR stabilised or improved"],["66%","PCOS — cycles regularised (women)"],["19.5% → 11.5%","Depression (PHQ-9 moderate+) reduced"],["7.4% → 4.0%","Anxiety (GAD-7 moderate+) reduced"],["60 to 75","Twin Wellness Score shift"]],
+    out:[["24%","Diabetes remission"],["85%","Medication reduced or eliminated"],["-6.0 kg","Mean weight change (7.4 percent)"],["80%","MAFLD normalised"],["-1.6 pts","Mean HbA1c reduction"],["70%","Dyslipidemia controlled (at LDL target)"],["-33%","Mean 10-yr ASCVD risk reduction"],["76%","CKD — eGFR stabilised or improved"],["66%","PCOS — cycles regularised (women)"],["19.5% → 11.5%","Depression (PHQ-9 moderate+) reduced"],["7.4% → 4.0%","Anxiety (GAD-7 moderate+) reduced"],["60 to 75","Twin Composite Health Score shift"]],
     recs:["Treat C-1042 as the benchmark cohort and publish its quarterly outcomes as the employer baseline.","Route the 7,516 multi-morbidity members to combined metabolic and cardiovascular care plans.","Target the 10,233 dyslipidemic members with the lipid-focused nutrition track, where this cohort responds well.","Sustain weekly active engagement above 50 percent to hold the remission rate at scale."]
   },
   "C-2087":{
     story:"C-2087 is a younger cohort of 8,340 members, the only one where women are nearly half the population and where the under-40 bands hold 67 percent of members. Diabetes prevalence is low (1,239 diabetic, 14.9 percent) but mental load is the headline: this group carries the highest PHQ-9 burden in the population. The clinical opportunity here is prevention and mental health, not late-stage metabolic reversal.",
-    out:[["22%","Diabetes remission"],["82%","Medication reduced or eliminated"],["-5.2 kg","Mean weight change (6.6 percent)"],["77%","MAFLD normalised"],["-1.3 pts","Mean HbA1c reduction"],["66%","Dyslipidemia controlled (at LDL target)"],["-28%","Mean 10-yr ASCVD risk reduction"],["72%","CKD — eGFR stabilised or improved"],["68%","PCOS — cycles regularised (women)"],["22.0% → 13.5%","Depression (PHQ-9 moderate+) reduced"],["9.0% → 4.8%","Anxiety (GAD-7 moderate+) reduced"],["63 to 77","Twin Wellness Score shift"]],
-    recs:["Shift the emphasis to prevention: catch the 4,096 dyslipidemic and 3,284 MAFLD members before they progress.","Scale PHQ-9 and GAD-7 screening cadence, given the elevated mental-health load in the under-40 bands.","Promote the stress-regulation and sleep micro-habits, which move the wellness score fastest in this group.","Keep the small diabetic subgroup (1,239) on early, intensive coaching to drive remission rather than maintenance."]
+    out:[["22%","Diabetes remission"],["82%","Medication reduced or eliminated"],["-5.2 kg","Mean weight change (6.6 percent)"],["77%","MAFLD normalised"],["-1.3 pts","Mean HbA1c reduction"],["66%","Dyslipidemia controlled (at LDL target)"],["-28%","Mean 10-yr ASCVD risk reduction"],["72%","CKD — eGFR stabilised or improved"],["68%","PCOS — cycles regularised (women)"],["22.0% → 13.5%","Depression (PHQ-9 moderate+) reduced"],["9.0% → 4.8%","Anxiety (GAD-7 moderate+) reduced"],["63 to 77","Twin Composite Health Score shift"]],
+    recs:["Shift the emphasis to prevention: catch the 4,096 dyslipidemic and 3,284 MAFLD members before they progress.","Scale PHQ-9 and GAD-7 screening cadence, given the elevated mental-health load in the under-40 bands.","Promote the stress-regulation and sleep micro-habits, which move the Twin Composite Health Score fastest in this group.","Keep the small diabetic subgroup (1,239) on early, intensive coaching to drive remission rather than maintenance."]
   },
   "C-3361":{
     story:"C-3361 is a 7,050-member, desk-bound workforce that over-indexes on obesity and lipids. 3,371 members (47.8 percent) are obese, the highest rate in the population, and class II to III obesity (BMI above 35) is notably elevated. Dyslipidemia reaches 69.7 percent. With 3,241 members carrying multiple comorbidities, this cohort responds strongly to weight-led intervention.",
-    out:[["23%","Diabetes remission"],["86%","Medication reduced or eliminated"],["-6.4 kg","Mean weight change (7.9 percent)"],["81%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["69%","Dyslipidemia controlled (at LDL target)"],["-30%","Mean 10-yr ASCVD risk reduction"],["73%","CKD — eGFR stabilised or improved"],["63%","PCOS — cycles regularised (women)"],["18.5% → 11.2%","Depression (PHQ-9 moderate+) reduced"],["7.0% → 3.9%","Anxiety (GAD-7 moderate+) reduced"],["59 to 74","Twin Wellness Score shift"]],
+    out:[["23%","Diabetes remission"],["86%","Medication reduced or eliminated"],["-6.4 kg","Mean weight change (7.9 percent)"],["81%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["69%","Dyslipidemia controlled (at LDL target)"],["-30%","Mean 10-yr ASCVD risk reduction"],["73%","CKD — eGFR stabilised or improved"],["63%","PCOS — cycles regularised (women)"],["18.5% → 11.2%","Depression (PHQ-9 moderate+) reduced"],["7.0% → 3.9%","Anxiety (GAD-7 moderate+) reduced"],["59 to 74","Twin Composite Health Score shift"]],
     recs:["Lead with the weight and movement track, which delivers this cohort's largest gains given the obesity concentration.","Flag the BMI-above-35 subgroup for clinician review and a structured nutrition plan.","Pair lipid management with weight loss for the 4,912 dyslipidemic members.","Build movement breaks into the working day to counter the sedentary baseline."]
   },
   "C-4189":{
     story:"C-4189 is the oldest cohort at 5,880 members, with 64 percent over 40 and the highest cardiovascular load in the population. Hypertension reaches 44.5 percent (2,618 members), ASCVD is 11.6 percent (682 members) and CKD is 20.3 percent (1,196 members). Diabetes here is more established, with a longer mean duration. The priority is cardiovascular and renal protection.",
-    out:[["21%","Diabetes remission"],["83%","Medication reduced or eliminated"],["-5.5 kg","Mean weight change (6.8 percent)"],["78%","MAFLD normalised"],["-1.4 pts","Mean HbA1c reduction"],["64%","Dyslipidemia controlled (at LDL target)"],["-27%","Mean 10-yr ASCVD risk reduction"],["70%","CKD — eGFR stabilised or improved"],["61%","PCOS — cycles regularised (women)"],["17.5% → 11.0%","Depression (PHQ-9 moderate+) reduced"],["6.6% → 3.8%","Anxiety (GAD-7 moderate+) reduced"],["58 to 72","Twin Wellness Score shift"]],
+    out:[["21%","Diabetes remission"],["83%","Medication reduced or eliminated"],["-5.5 kg","Mean weight change (6.8 percent)"],["78%","MAFLD normalised"],["-1.4 pts","Mean HbA1c reduction"],["64%","Dyslipidemia controlled (at LDL target)"],["-27%","Mean 10-yr ASCVD risk reduction"],["70%","CKD — eGFR stabilised or improved"],["61%","PCOS — cycles regularised (women)"],["17.5% → 11.0%","Depression (PHQ-9 moderate+) reduced"],["6.6% → 3.8%","Anxiety (GAD-7 moderate+) reduced"],["58 to 72","Twin Composite Health Score shift"]],
     recs:["Prioritise blood pressure control and the 682 ASCVD members for clinician-led cardiovascular care.","Monitor the 1,196 CKD-flagged members closely, with renal markers tracked at every re-screen.","Set realistic glycaemic targets for the long-duration diabetic subgroup rather than remission-first goals.","Coordinate with the employer's existing cardiology referral pathways for high-risk members."]
   },
   "C-5530":{
     story:"C-5530 is a 4,760-member cohort defined by diet-pattern risk. MAFLD prevalence is the highest in the population at 60.0 percent (2,854 members), and obesity and dyslipidemia track above average. Diabetes prevalence is moderate (1,010 diabetic). The liver signal makes this the clearest case for nutrition-first intervention.",
-    out:[["24%","Diabetes remission"],["84%","Medication reduced or eliminated"],["-5.9 kg","Mean weight change (7.2 percent)"],["82%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["68%","Dyslipidemia controlled (at LDL target)"],["-31%","Mean 10-yr ASCVD risk reduction"],["75%","CKD — eGFR stabilised or improved"],["65%","PCOS — cycles regularised (women)"],["18.8% → 11.3%","Depression (PHQ-9 moderate+) reduced"],["7.1% → 4.0%","Anxiety (GAD-7 moderate+) reduced"],["61 to 76","Twin Wellness Score shift"]],
+    out:[["24%","Diabetes remission"],["84%","Medication reduced or eliminated"],["-5.9 kg","Mean weight change (7.2 percent)"],["82%","MAFLD normalised"],["-1.5 pts","Mean HbA1c reduction"],["68%","Dyslipidemia controlled (at LDL target)"],["-31%","Mean 10-yr ASCVD risk reduction"],["75%","CKD — eGFR stabilised or improved"],["65%","PCOS — cycles regularised (women)"],["18.8% → 11.3%","Depression (PHQ-9 moderate+) reduced"],["7.1% → 4.0%","Anxiety (GAD-7 moderate+) reduced"],["61 to 76","Twin Composite Health Score shift"]],
     recs:["Lead with the precision-nutrition track, where this cohort's liver outcomes are strongest.","Re-screen liver markers (ALT, AST, HSI) quarterly for the 2,854 MAFLD members.","Address dyslipidemia and obesity alongside fatty liver, since they cluster in the same members.","Reinforce the food-quality micro-habits that drive the MAFLD normalisation rate."]
   },
   "C-6724":{
     story:"C-6724 is a 4,020-member cohort with the most established diabetes in the population. 1,246 members are diabetic (31.0 percent) and the duration profile skews long, with 32 percent of diabetics at 10 years or more. Hypertension and CKD track above average. Outcomes lean toward control and medication reduction rather than full remission.",
-    out:[["20%","Diabetes remission"],["80%","Medication reduced or eliminated"],["-5.4 kg","Mean weight change (6.7 percent)"],["77%","MAFLD normalised"],["-1.9 pts","Mean HbA1c reduction"],["63%","Dyslipidemia controlled (at LDL target)"],["-26%","Mean 10-yr ASCVD risk reduction"],["69%","CKD — eGFR stabilised or improved"],["60%","PCOS — cycles regularised (women)"],["18.0% → 11.4%","Depression (PHQ-9 moderate+) reduced"],["6.9% → 3.9%","Anxiety (GAD-7 moderate+) reduced"],["59 to 73","Twin Wellness Score shift"]],
+    out:[["20%","Diabetes remission"],["80%","Medication reduced or eliminated"],["-5.4 kg","Mean weight change (6.7 percent)"],["77%","MAFLD normalised"],["-1.9 pts","Mean HbA1c reduction"],["63%","Dyslipidemia controlled (at LDL target)"],["-26%","Mean 10-yr ASCVD risk reduction"],["69%","CKD — eGFR stabilised or improved"],["60%","PCOS — cycles regularised (women)"],["18.0% → 11.4%","Depression (PHQ-9 moderate+) reduced"],["6.9% → 3.9%","Anxiety (GAD-7 moderate+) reduced"],["59 to 73","Twin Composite Health Score shift"]],
     recs:["Focus on medication reduction and stable control for the long-duration diabetic subgroup.","Track the 830 CKD-flagged members with renal panels at each re-screen.","Set HbA1c reduction, not remission, as the primary target for members past 10 years of diabetes.","Use continuous glucose monitoring to manage variability in this established-disease group."]
   },
   "C-7918":{
     story:"C-7918 is the youngest and healthiest cohort at 3,746 members, the only one where women outnumber men and where 73 percent are under 40. Diabetes prevalence is the lowest in the population (525 diabetic, 14.0 percent) and every condition tracks below average. This is a prevention and engagement cohort rather than a treatment one.",
-    out:[["23%","Diabetes remission"],["83%","Medication reduced or eliminated"],["-5.3 kg","Mean weight change (6.7 percent)"],["79%","MAFLD normalised"],["-1.2 pts","Mean HbA1c reduction"],["71%","Dyslipidemia controlled (at LDL target)"],["-34%","Mean 10-yr ASCVD risk reduction"],["77%","CKD — eGFR stabilised or improved"],["69%","PCOS — cycles regularised (women)"],["17.0% → 10.5%","Depression (PHQ-9 moderate+) reduced"],["6.5% → 3.6%","Anxiety (GAD-7 moderate+) reduced"],["63 to 78","Twin Wellness Score shift"]],
+    out:[["23%","Diabetes remission"],["83%","Medication reduced or eliminated"],["-5.3 kg","Mean weight change (6.7 percent)"],["79%","MAFLD normalised"],["-1.2 pts","Mean HbA1c reduction"],["71%","Dyslipidemia controlled (at LDL target)"],["-34%","Mean 10-yr ASCVD risk reduction"],["77%","CKD — eGFR stabilised or improved"],["69%","PCOS — cycles regularised (women)"],["17.0% → 10.5%","Depression (PHQ-9 moderate+) reduced"],["6.5% → 3.6%","Anxiety (GAD-7 moderate+) reduced"],["63 to 78","Twin Composite Health Score shift"]],
     recs:["Keep the program preventive: protect the low baseline rather than treat established disease.","Drive engagement and habit streaks, where this young cohort has the most headroom.","Catch the 1,711 dyslipidemic and 1,375 MAFLD members early, before progression.","Use this cohort to test new preventive content before rolling it to higher-risk employers."]
   }
 };
@@ -1664,7 +1672,7 @@ _reg('HEALTHY','Healthy — optimal metabolic state',function(b){
     ['HbA1c reduction', 1.5, 0.4, ' pts'],
     ['MAFLD normalised', 62, 19, '%'],
     ['Medication reduced/eliminated', 84, 26, '%'],
-    ['Members reaching optimal TWS', 47, 14, '%']
+    ['Members reaching a Strong TCHS (80+)', 47, 14, '%']
   ];
   // Scale an outcome tile's value to a selected timepoint (D30..D360).
   // Ramp = 15% → 40% → 70% → 90% → 100% of the journey (D30 very low, gradual climb to D360 full).
